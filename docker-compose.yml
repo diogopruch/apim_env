@@ -6,6 +6,9 @@ services:
       - 3306
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: password
     volumes:
       - ./conf/mysql/scripts:/docker-entrypoint-initdb.d
       - ./conf/mysql/conf/my.cnf:/etc/mysql/my.cnf
@@ -37,7 +40,7 @@ services:
       - "8280:8280"
       - "8243:8243"
   keycloak:
-      image: quay.io/keycloak/keycloak:latest
+      image: quay.io/keycloak/keycloak:legacy
       environment:
         DB_VENDOR: MYSQL
         DB_ADDR: mysql
@@ -53,7 +56,5 @@ services:
       ports:
         - 8080:8080
         - 8787:8787
-      command:
-        - start-dev
       depends_on:
         - mysql
