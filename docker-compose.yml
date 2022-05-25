@@ -41,7 +41,7 @@ services:
       - "8280:8280"
       - "8243:8243"
   keycloak:
-    image: quay.io/keycloak/keycloak:legacy
+    image: jboss/keycloak:10.0.2
     environment:
       DB_VENDOR: MYSQL
       DB_ADDR: mysql
