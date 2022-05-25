@@ -3,7 +3,7 @@ services:
   mysql:
     image: mysql:5.7.37
     ports:
-      - 3306
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: keycloak
@@ -12,6 +12,7 @@ services:
     volumes:
       - ./conf/mysql/scripts:/docker-entrypoint-initdb.d
       - ./conf/mysql/conf/my.cnf:/etc/mysql/my.cnf
+      - ./data/db:/var/lib/mysql
     ulimits:
       nofile:
         soft: 20000
@@ -40,21 +41,20 @@ services:
       - "8280:8280"
       - "8243:8243"
   keycloak:
-      image: quay.io/keycloak/keycloak:legacy
-      environment:
-        DB_VENDOR: MYSQL
-        DB_ADDR: mysql
-        DB_DATABASE: keycloak
-        DB_USER: root
-        DB_PASSWORD: root
-        KEYCLOAK_USER: admin
-        KEYCLOAK_PASSWORD: Pa55w0rd
-        KEYCLOAK_ADMIN: admin
-        KEYCLOAK_ADMIN_PASSWORD: admin
-        # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the MySQL JDBC driver documentation in order to use it.
-        #JDBC_PARAMS: "connectTimeout=30000"
-      ports:
-        - 8080:8080
-        - 8787:8787
-      depends_on:
-        - mysql
+    image: quay.io/keycloak/keycloak:legacy
+    environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: mysql
+      DB_DATABASE: keycloak
+      DB_USER: root
+      DB_PASSWORD: root
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - 8080:8080
+      - 8787:8787
+    depends_on:
+      mysql:
+        condition: service_healthy
