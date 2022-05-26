@@ -54,6 +54,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
       - 8080:8080
+      - 8443:8443
       - 8787:8787
     depends_on:
       mysql:
